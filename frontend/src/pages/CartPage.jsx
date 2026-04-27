@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
+import RazorpayButton from '../components/payment/RazorpayButton'; // ← Razorpay
 
 const CartPage = () => {
     const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
@@ -134,6 +135,21 @@ const CartPage = () => {
                             <p className="small text-secondary text-center mt-3">
                                 Free shipping on orders over ₹999
                             </p>
+                        </Card>
+
+                        {/* ── Razorpay Pay Now block ─────────────────────────────────────
+                             Added below the existing checkout button – nothing above changed.
+                        ────────────────────────────────────────────────────────────────── */}
+                        <Card className="border-0 shadow-sm rounded-4 p-4 mt-3">
+                            <RazorpayButton
+                                amountInRupees={total}
+                                receipt={`cart_${Date.now()}`}
+                                onPaymentDone={(data) => {
+                                    // Optional: you can navigate or clear cart here
+                                    console.log('✅ Razorpay payment verified:', data);
+                                }}
+                                disabled={cartItems.length === 0}
+                            />
                         </Card>
                     </Col>
                 </Row>
